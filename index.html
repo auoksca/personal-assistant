@@ -1,0 +1,189 @@
+<html>
+  <head>
+    <style>
+      
+.chat-container {
+  border: 2px solid black;
+  background-color: black;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px auto;
+  width: 60%;
+}
+
+.chat-container p {
+  background-color: black;
+  font-family: Helvetica;
+}
+
+/* Darker chat container */
+.darker {
+  border-color: black;
+  background-color: black;
+  overflow-x : scroll;
+}
+
+.darker p {
+  background-color: black;
+  overflow-x: scroll;
+}
+
+/* Clear floats */
+.chat-container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Style images */
+.chat-container img {
+  float: left;
+  max-width: 60px;
+  max-height: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+/* Style the right image */
+.chat-container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+/* Style time text */
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+/* Style time text */
+.time-left {
+  float: left;
+  color: #999;
+}
+a {
+  position: relative;
+  display: inline-block;
+  padding: 15px 30px;
+  color: yellow;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-decoration: none;
+  font-size: 24px;
+  overflow: hidden;
+  transition: 0.2s;
+  margin-top:300px;
+  margin-left:40px;
+}
+
+a:hover {
+  color: #255784;
+  background: #2196f3;
+  box-shadow: 0 0 10px #2196f3, 0 0 60px #2196f3, 0 0 80px #2196f3;
+}
+    </style>
+    
+  </head>
+  <body style="background-color:black;">
+      <a  class="voice" href="#">Activate Voice</a>
+    <div style="width:380px;height:1px;overflow-x:scroll;background-color:black;margin-top:10px;">
+       <div id="container">
+        <div class="chat-container">
+            <p class="voice2text">Hi there</p>
+        </div>
+
+        <div class="chat-container darker">
+           <p class="voice2text">Hello back</p>
+        </div>
+        </div>
+    </div>
+      <script>const voice = document.querySelector(".voice");
+const voice2text = document.querySelector(".voice2text");
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recorder = new SpeechRecognition();
+
+function addHumanText(text) {
+  const chatContainer = document.createElement("div");
+  chatContainer.classList.add("chat-container");
+  const chatBox = document.createElement("p");
+  chatBox.classList.add("voice2text");
+  const chatText = document.createTextNode(text);
+  chatBox.appendChild(chatText);
+  chatContainer.appendChild(chatBox);
+  return chatContainer;
+}
+
+function addBotText(text) {
+  const chatContainer1 = document.createElement("div");
+  chatContainer1.classList.add("chat-container");
+  chatContainer1.classList.add("darker");
+  const chatBox1 = document.createElement("p");
+  chatBox1.classList.add("voice2text");
+  const chatText1 = document.createTextNode(text);
+  chatBox1.appendChild(chatText1);
+  chatContainer1.appendChild(chatBox1);
+  return chatContainer1;
+}
+
+function botVoice(message) {
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = "Sorry, I did not understand that.";
+
+    if (message.includes('how are you')) {
+      speech.text = "I am fine, thanks. How are you?";
+    }
+
+    if (message.includes('fine')) {
+      speech.text = "Nice to hear that. How can I assist you today?";
+    }
+
+    if (message.includes('weather')) {
+      speech.text = "Of course. Where are you currently?";
+    }
+
+    
+    if (message.includes('who is your father')) {
+      speech.text = "you dont know who is my father. you bloddy fucker. you only created me right?";
+    }
+    
+    if (message.includes('Bangalore')) {
+      speech.text = "its 28 degree and sunny";
+    }
+    
+    if (message.includes('thank you')) {
+      speech.text = "its ok baby";
+    }
+    
+    if (message.includes('hi')) {
+      speech.text = "hello";
+    }
+
+    speech.volume = 1;
+    speech.rate = 1;
+    speech.pitch = 1;
+    window.speechSynthesis.speak(speech);
+    var element = document.getElementById("container");
+    element.appendChild(addBotText(speech.text));
+}
+
+recorder.onstart = () => {
+  console.log('Voice activated');
+};
+
+recorder.onresult = (event) => {
+  const resultIndex = event.resultIndex;
+  const transcript = event.results[resultIndex][0].transcript;
+  var element = document.getElementById("container");
+  element.appendChild(addHumanText(transcript));
+  botVoice(transcript);
+};
+
+voice.addEventListener('click', () =>{
+  recorder.start();
+});
+</script>
+  </body>
+</html>
